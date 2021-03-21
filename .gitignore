@@ -1,0 +1,7 @@
+node_modules
+package-lock.json
+cypress.json
+cypress/integration/examples
+cypress/fixtures
+cypress/plugins
+cypress/support
