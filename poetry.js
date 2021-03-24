@@ -1,7 +1,7 @@
-const text = document.getElementById('userWord');
-const parameters = document.querySelector('select');
-const results = document.querySelector('ol');
-const textarea = document.querySelector('textarea');
+const text = document.getElementById('userWord'),
+    parameters = document.querySelector('select'),
+    results = document.querySelector('ol'),
+    textarea = document.querySelector('textarea');
 textarea.innerText = "";
 const button = document.querySelector('button');
 
@@ -11,7 +11,8 @@ button.onclick = function () {
         .then(results.innerHTML = '')
         .then((data) => {
             if (data[0].defs === undefined) {
-                return alert('No results found. Try another option');}
+                return alert('No results found. Try another option');
+            }
             let actualWords = [];
             for (let i = 0; i < data.length; i++) {
                 if (data[i].defs !== undefined) {
