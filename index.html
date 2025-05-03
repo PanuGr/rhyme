@@ -2,36 +2,15 @@
 <html lang="en">
 
 <head>
-
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="author" content="Panagiotis Panagiotakopoulos" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Panagiotis Panagiotakopoulos">
   <meta name="description"
-    content="Find a word that rhymes with another given word. The service is provided by https://www.datamuse.com/" />
-  <link rel="stylesheet preload" as="style" href="bootstrap.min.css" />
+    content="Find a word that rhymes with another given word. The service is provided by https://www.datamuse.com/">
   <title>Find the right word</title>
-  <style>
-    body {
-      background-image: url("poetry-book-img.webp");
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-      height: 100vh;
-    }
-
-    ol {
-      display: flex;
-      flex-direction: row;
-      justify-content: start;
-      flex-wrap: wrap;
-    }
-
-    ol li:hover {
-      cursor: pointer;
-      background-color: lightgray;
-      transition: background-color 150ms ease-in;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="poetry.js"></script>
+  
 </head>
 
 <body>
@@ -53,8 +32,8 @@
       </select>
       <label for="userWord" class="form-label mt-2">
         My word:</label>
-      <input class="form-control " id="userWord" type="text"></input>
-      <button class="btn btn-primary d-block my-3">Search</button>
+      <input class="form-control " id="userWord" type="text">
+      <button type="submit" class="btn btn-primary d-block my-3">Search</button>
       <ol>
       </ol>
       <label for="textarea" class="form-label">
@@ -63,11 +42,10 @@
         placeholder="You can write down your thoughts here or even a poem.">
       </textarea>
     </form>
-    <a href="http://panagiotis.netlify.app" class="link-dark alert-link">Visit my site for more projects</a>
-
   </main>
-  <script src="poetry.js"></script>
-  <script async src="bootstrap.bundle.min.js"></script>
+  <footer>
+    <small>Created with ❤️ <a class="link-dark alert-link" href="http://digisolutech.netlify.app/">by Panagiotis Panagiotakopoulos</a></small>
+  </footer>
 </body>
 
 </html>

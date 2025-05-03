@@ -1,0 +1,20 @@
+body {
+    background-image: url("poetry-book-img.avif");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+  }
+
+  ol {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    flex-wrap: wrap;
+  }
+
+  ol li:hover {
+    cursor: pointer;
+    background-color: lightgray;
+    transition: background-color 150ms ease-in;
+  }
