@@ -12,7 +12,7 @@ const textareaElement = document.getElementById('textarea');
 const loadingSpinner = document.getElementById('loadingSpinner');
 const noResultsAlert = document.getElementById('noResultsAlert');
 const resultsHeading = document.getElementById('resultsHeading');
-//const clearTextBtn = document.getElementById('clearTextBtn');
+const clearTextBtn = document.getElementById('clearTextBtn');
 const copyTextBtn = document.getElementById('copyTextBtn');
 
 // Clear the textarea on page load
@@ -165,7 +165,7 @@ async function handleFormSubmit(event) {
  */
 function clearTextarea() {
   textareaElement.value = '';
-  textareaElement.focus();
+  resultsContainer.innerHTML = '';
 }
 
 /**
@@ -195,7 +195,7 @@ async function copyToClipboard() {
 
 // Event Listeners
 wordFinderForm.addEventListener('submit', handleFormSubmit);
-//clearTextBtn.addEventListener('click', clearTextarea);
+clearTextBtn.addEventListener('click', clearTextarea);
 copyTextBtn.addEventListener('click', copyToClipboard);
 
 // Add keyboard shortcuts 
