@@ -17,3 +17,7 @@ This version integrates AI into this application. The AI is providing creative a
 - Structure Analysis: Get feedback on rhythm, imagery, and coherence
 - Theme Discovery: Find related themes and topics for your poem
 - Two-Panel Interface: Separated word finding from composition for better workflow
+
+## Future Enhancements
+- Add local storage to save drafts of poems
+- Add the ability to share poems directly to social media

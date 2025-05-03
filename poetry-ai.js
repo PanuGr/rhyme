@@ -2,6 +2,8 @@
  * Poetry Assistant with AI - Enhanced word finder tool
  * Helps find rhyming and related words using Datamuse API with AI-powered suggestions
  */
+const API_KEY  = process.env.RhymeAI;
+console.log(API_KEY)
 
 // DOM Elements
 const wordFinderForm = document.getElementById('wordFinderForm');
@@ -230,8 +232,7 @@ async function getAISuggestions() {
 
   try {
     const suggestionData = await fetchFromAI({
-      prompt: `Based on this poem draft: "${currentText}"\n\nProvide 3-5 suggestions for how to continue or improve this poem. Consider rhythm, theme, and emotional tone. Format as a bulleted list of short, specific ideas.`,
-      max_tokens: 150
+      prompt: `Based on this poem draft: "${currentText}"\n\nProvide 3 suggestions for how to continue or improve this poem. Consider rhythm, theme, and emotional tone. Format as a bulleted list of short, specific ideas.`
     });
 
     displaySuggestions(suggestionData);
@@ -258,8 +259,7 @@ async function getAICompletion() {
 
   try {
     const completionData = await fetchFromAI({
-      prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 2-4 more lines.`,
-      max_tokens: 200
+      prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 3 more lines.`
     });
 
     // Append the completion to the existing text
@@ -293,11 +293,11 @@ function createAlert(message, type = 'info') {
 
   alertContainer.appendChild(alert);
 
-  // Auto-remove after 5 seconds
+  // Auto-remove after 10 seconds
   setTimeout(() => {
     const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
     bsAlert.close();
-  }, 5000);
+  }, 10000);
 }
 
 /**
@@ -375,7 +375,7 @@ async function fetchFromAI(options) {
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": "Bearer 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",
+        "Authorization": `Bearer ${API_KEY}`,
         "HTTP-Referer": "<YOUR_SITE_URL>", // Optional. Site URL for rankings on openrouter.ai.
         "X-Title": "<YOUR_SITE_NAME>", // Optional. Site title for rankings on openrouter.ai.
         "Content-Type": "application/json"
@@ -417,8 +417,7 @@ async function getRelatedTopics() {
 
   try {
     const topicsData = await fetchFromAI({
-      prompt: `Based on this poem draft: "${currentText}"\n\nIdentify 5 related topics, themes, or imagery that could enhance this poem. Format as a bulleted list.`,
-      max_tokens: 150
+      prompt: `Based on this poem draft: "${currentText}"\n\nIdentify 3 related topics, themes, or imagery that could enhance this poem. Format as a bulleted list.`
     });
 
     // Display topics in a special section
@@ -456,8 +455,7 @@ async function analyzePoem() {
 
   try {
     const analysisData = await fetchFromAI({
-      prompt: `Analyze this poem draft: "${currentText}"\n\nProvide brief feedback on: 1) Rhythm/meter, 2) Imagery, 3) Theme coherence, and 4) One specific suggestion for improvement.`,
-      max_tokens: 250
+      prompt: `Analyze this poem draft: "${currentText}"\n\nProvide brief feedback on: 1) Rhythm/meter, 2) Imagery, 3) Theme coherence, and 4) One specific suggestion for improvement.`
     });
 
     // Show analysis in modal
@@ -503,24 +501,4 @@ document.addEventListener('keydown', (event) => {
 // Focus the input field on page load
 window.addEventListener('load', () => {
   userWordInput.focus();
-
-  // Check if API key is configured
-  if (OPENAI_API_KEY === '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') {
-    // Disable AI features if no API key is provided
-    const aiFeatures = document.getElementById('aiFeatures');
-    if (aiFeatures) {
-      aiFeatures.innerHTML = `
-        <div class="alert alert-warning">
-          <p><strong>AI features are disabled.</strong> To enable AI functionality, please configure your OpenAI API key.</p>
-          <p>Edit the poetry-ai.js file and replace YOUR_OPENAI_API_KEY with your actual API key.</p>
-        </div>
-      `;
-    }
-
-    // Disable AI buttons
-    if (aiSuggestBtn) aiSuggestBtn.disabled = true;
-    if (aiCompletionBtn) aiCompletionBtn.disabled = true;
-    document.getElementById('analyzeBtn')?.setAttribute('disabled', 'true');
-    document.getElementById('topicsBtn')?.setAttribute('disabled', 'true');
-  }
 });
