@@ -11,41 +11,76 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+    crossorigin="anonymous"></script>
   <script defer src="poetry.js"></script>
 </head>
 
-<body>
-  <header class="container-fluid text-white">
-    <h1 class="mt-3">Feel the rhythm 🎵</h1>
-    <p class="h6">Did you ever want to write something that rhymes well but you just couldn't find the right words?
-      🤔<br>
-      I know the feeling! That's why I created this app so the right word will be just a click away. 🥳 </p>
+<body class="container">
+  <header class="py-3 text-white">
+    <h1 class="fw-bold">Feel the rhythm 🎵</h1>
+    <p class="lead">Did you ever want to write something that rhymes well but couldn't find the right words? 🤔<br>
+      I know the feeling! That's why I created this app so the perfect word will be just a click away. 🥳 </p>
     <p>Using the form below, you can easily find matching words.</p>
   </header>
   <main>
-    <form class="container card-body bg-light rounded ">
-      <label class="form-label" for="options">Find a word that:</label>
-      <select class="form-select" aria-label="select options" id="options">
-        <option value="sl">Sounds similar to</option>
-        <option value="ml">Means like</option>
-        <option value="rel_hom">Sounds-alike with</option>
-        <option value="rel_rhy">Rhymes with</option>
-      </select>
-      <label for="userWord" class="form-label mt-2">
-        My word:</label>
-      <input class="form-control " id="userWord" type="text">
-      <button type="submit" class="btn btn-primary d-block my-3">Search</button>
-      <ol>
-      </ol>
-      <label for="textarea" class="form-label">
-        Notes</label>
-      <textarea class="form-control" id="textarea" rows="3"
-        placeholder="You can write down your thoughts here or even a poem.">
-      </textarea>
-    </form>
+    <div class="app-container">
+      <form id="wordFinderForm" class="mb-4">
+        <div class="mb-3">
+          <label class="form-label" for="options">Find a word that:</label>
+          <select class="form-select" aria-label="select options" id="options">
+            <option value="rel_rhy" selected>Rhymes with</option>
+            <option value="rel_hom">Sounds-alike with</option>
+            <option value="ml">Means like</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="userWord" class="form-label">My word:</label>
+          <input class="form-control" id="userWord" type="text" placeholder="Enter a word" aria-label="Enter a word"
+            required>
+        </div>
+
+        <button type="submit" class="btn btn-primary d-block mb-3">
+          <span class="button-text">Search</span>
+          <span class="spinner-border spinner-border-sm ms-2 loading-indicator" role="status" aria-hidden="true"
+            id="loadingSpinner"></span>
+        </button>
+
+        <div class="alert alert-info d-none" role="alert" id="noResultsAlert">
+          No results found. Try another word or option.
+        </div>
+
+        <h2 class="h5 mt-4 mb-2 d-none" id="resultsHeading">Results:</h2>
+        <ol id="results" class="results-container ps-0"></ol>
+
+        <div class="mt-4">
+          <label for="textarea" class="form-label">Your poem or notes:</label>
+          <textarea class="form-control" id="textarea" rows="5"
+            placeholder="You can write down your thoughts here or create your poem with the words you find."></textarea>
+        </div>
+
+        <div class="d-flex justify-content-end mt-3">
+          <button type="reset" class="btn btn-outline-secondary me-2" id="clearTextBtn">Clear Text</button>
+          <button type="button" class="btn btn-outline-primary" id="copyTextBtn">Copy to Clipboard</button>
+        </div>
+      </form>
+
+      <div class="mt-4">
+        <details>
+          <summary>About this app</summary>
+          <div class="p-3 bg-light rounded">
+            <p>This app uses the <a href="https://www.datamuse.com/api/" target="_blank" rel="noopener">Datamuse API</a>
+              to help you find words for your poetry or creative writing.</p>
+            <p>Simply enter a word, choose how you want to find related words, and click on any result to add it to your
+              text.</p>
+          </div>
+        </details>
+      </div>
+    </div>
   </main>
-  <footer>
+  <footer class="mt-4 mb-3 text-center">
     <small>Created with ❤️ <a class="link-dark alert-link" href="http://digisolutech.netlify.app/">by Panagiotis
         Panagiotakopoulos</a></small>
   </footer>
