@@ -6,84 +6,174 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Panagiotis Panagiotakopoulos">
   <meta name="description"
-    content="Find a word that rhymes with another given word. The service is provided by https://www.datamuse.com/">
-  <title>Find the right word</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-  <link rel="stylesheet" href="style.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
-    crossorigin="anonymous"></script>
-  <script defer src="poetry.js"></script>
+    content="Find the perfect words for your poems with AI assistance. Powered by Datamuse API and AI.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css">
+  <title>AI Poetry Assistant | Find the right word</title>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script src="poetry-ai.js" defer></script>
 </head>
 
-<body class="container">
-  <header class="py-3 text-white">
-    <h1 class="fw-bold">Feel the rhythm 🎵</h1>
-    <p class="lead">Did you ever want to write something that rhymes well but couldn't find the right words? 🤔<br>
-      I know the feeling! That's why I created this app so the perfect word will be just a click away. 🥳 </p>
-    <p>Using the form below, you can easily find matching words.</p>
-  </header>
-  <main>
-    <div class="app-container">
-      <form id="wordFinderForm" class="mb-4">
-        <div class="mb-3">
-          <label class="form-label" for="options">Find a word that:</label>
-          <select class="form-select" aria-label="select options" id="options">
-            <option value="rel_rhy" selected>Rhymes with</option>
-            <option value="rel_hom">Sounds-alike with</option>
-            <option value="ml">Means like</option>
-          </select>
+<body>
+  <div class="container">
+    <header class="text-dark py-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <h1 class="app-title">Feel the rhythm 🎵 <span class="ai-badge">AI-powered</span></h1>
+      </div>
+      <p class="lead">Write beautiful poems with the help of intelligent word suggestions and AI assistance.</p>
+      <p>Search for the perfect words that rhyme, sound similar, or have similar meanings - then let AI help with
+        creative ideas.</p>
+    </header>
+
+    <main>
+      <div class="app-container">
+        <!-- Alert container for feedback messages -->
+        <div id="alertContainer"></div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card mb-4">
+              <div class="card-header bg-primary text-white">
+                <h2 class="h5 mb-0">Word Finder</h2>
+              </div>
+              <div class="card-body">
+                <form id="wordFinderForm">
+                  <div class="mb-3">
+                    <label class="form-label" for="options">Find a word that:</label>
+                    <select class="form-select" aria-label="select options" id="options">
+                      <option value="sl">Sounds similar to</option>
+                      <option value="ml">Means like</option>
+                      <option value="rel_hom">Sounds-alike with</option>
+                      <option value="rel_rhy" selected>Rhymes with</option>
+                      <option value="rel_jjb">Can be described as</option>
+                      <option value="rel_jja">Describes</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="userWord" class="form-label">My word:</label>
+                    <input class="form-control" id="userWord" type="text" placeholder="Enter a word"
+                      aria-label="Enter a word" required>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary d-block w-100">
+                    <span class="button-text">Search</span>
+                    <span class="spinner-border spinner-border-sm ms-2 loading-indicator" role="status"
+                      aria-hidden="true" id="loadingSpinner"></span>
+                  </button>
+                </form>
+
+                <div class="alert alert-info d-none mt-3" role="alert" id="noResultsAlert">
+                  No results found. Try another word or option.
+                </div>
+
+                <h2 class="h6 mt-4 mb-2 d-none" id="resultsHeading">Results:</h2>
+                <ol id="results" class="results-container ps-0"></ol>
+              </div>
+            </div>
+
+            <!-- AI Features section -->
+            <div id="aiFeatures" class="features-card card mb-4">
+              <div class="card-header bg-purple text-white" style="background-color: var(--accent-color);">
+                <h2 class="h5 mb-0">AI Assistance</h2>
+              </div>
+              <div class="card-body">
+                <div class="d-grid gap-2">
+                  <button type="button" class="btn btn-outline-secondary" id="aiSuggestBtn">
+                    <i class="bi bi-lightbulb"></i> Get Line Suggestions
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary" id="aiCompletionBtn">
+                    <i class="bi bi-pencil-square"></i> Complete My Poem
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary" id="analyzeBtn">
+                    <i class="bi bi-search"></i> Analyze Structure
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary" id="topicsBtn">
+                    <i class="bi bi-list-stars"></i> Find Related Themes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-8">
+            <div class="card mb-4">
+              <div class="card-header">
+                <h2 class="h5 mb-0">Your Poem</h2>
+              </div>
+              <div class="card-body">
+                <textarea class="form-control" id="textarea" rows="10"
+                  placeholder="You can write down your thoughts here or create your poem with the words you find. Click on any word from the results to add it here."></textarea>
+
+                <div class="d-flex justify-content-end mt-3">
+                  <button type="button" class="btn btn-outline-secondary me-2" id="clearTextBtn">Clear Text</button>
+                  <button type="button" class="btn btn-outline-primary" id="copyTextBtn">Copy to Clipboard</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Suggestions container -->
+            <div id="suggestionsContainer" class="mb-4"></div>
+
+            <!-- Topics container -->
+            <div id="topicsContainer" class="mb-4"></div>
+          </div>
         </div>
-
-        <div class="mb-3">
-          <label for="userWord" class="form-label">My word:</label>
-          <input class="form-control" id="userWord" type="text" placeholder="Enter a word" aria-label="Enter a word"
-            required>
-        </div>
-
-        <button type="submit" class="btn btn-primary d-block mb-3">
-          <span class="button-text">Search</span>
-          <span class="spinner-border spinner-border-sm ms-2 loading-indicator" role="status" aria-hidden="true"
-            id="loadingSpinner"></span>
-        </button>
-
-        <div class="alert alert-info d-none" role="alert" id="noResultsAlert">
-          No results found. Try another word or option.
-        </div>
-
-        <h2 class="h5 mt-4 mb-2 d-none" id="resultsHeading">Results:</h2>
-        <ol id="results" class="results-container ps-0"></ol>
 
         <div class="mt-4">
-          <label for="textarea" class="form-label">Your poem or notes:</label>
-          <textarea class="form-control" id="textarea" rows="5"
-            placeholder="You can write down your thoughts here or create your poem with the words you find."></textarea>
+          <details>
+            <summary>About this app</summary>
+            <div class="p-3 bg-light rounded">
+              <p>This app uses the <a href="https://www.datamuse.com/api/" target="_blank" rel="noopener">Datamuse
+                  API</a>
+                to help you find words for your poetry or creative writing, enhanced with AI capabilities to suggest
+                poem ideas,
+                provide structure analysis, and help you complete your work.</p>
+              <p>Simply enter a word, choose how you want to find related words, and click on any result to add it to
+                your text.
+                Then use the AI tools to enhance your creativity.</p>
+            </div>
+          </details>
         </div>
+      </div>
+    </main>
 
-        <div class="d-flex justify-content-end mt-3">
-          <button type="reset" class="btn btn-outline-secondary me-2" id="clearTextBtn">Clear Text</button>
-          <button type="button" class="btn btn-outline-primary" id="copyTextBtn">Copy to Clipboard</button>
+    <footer class="mt-4 mb-3 text-center">
+      <p class="text-white">Created by <a href="http://panagiotis.netlify.app" class="link-light" target="_blank"
+          rel="noopener">Panagiotis</a> |
+        <a href="https://github.com/yourusername/writepoem" class="link-light" target="_blank" rel="noopener">GitHub</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- AI Loading Indicator -->
+  <div class="ai-loading" id="aiLoadingIndicator">
+    <div class="ai-loading-content">
+      <div class="spinner-border text-primary mb-3" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mb-0">AI is thinking...</p>
+    </div>
+  </div>
+
+  <!-- Poem Analysis Modal -->
+  <div class="modal fade" id="poemAnalysisModal" tabindex="-1" aria-labelledby="poemAnalysisModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="poemAnalysisModalLabel">Poem Analysis</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-      </form>
-
-      <div class="mt-4">
-        <details>
-          <summary>About this app</summary>
-          <div class="p-3 bg-light rounded">
-            <p>This app uses the <a href="https://www.datamuse.com/api/" target="_blank" rel="noopener">Datamuse API</a>
-              to help you find words for your poetry or creative writing.</p>
-            <p>Simply enter a word, choose how you want to find related words, and click on any result to add it to your
-              text.</p>
-          </div>
-        </details>
+        <div class="modal-body" id="poemAnalysisBody">
+          <!-- Analysis content will be inserted here -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
-  </main>
-  <footer class="mt-4 mb-3 text-center">
-    <small>Created with ❤️ <a class="link-dark alert-link" href="http://digisolutech.netlify.app/">by Panagiotis
-        Panagiotakopoulos</a></small>
-  </footer>
+  </div>
+
 </body>
 
 </html>
