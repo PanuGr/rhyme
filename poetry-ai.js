@@ -40,11 +40,11 @@ async function fetchWords(searchParam, searchWord) {
     const response = await fetch(
       `https://api.datamuse.com/words?${searchParam}=${encodeURIComponent(searchWord)}&md=pd`
     );
-    
+
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
     }
-    
+
     return await response.json();
   } catch (error) {
     console.error('Error fetching words:', error);
@@ -70,7 +70,7 @@ function createResultElement(wordData) {
   const li = document.createElement('li');
   li.textContent = wordData.word;
   li.className = 'result-item';
-  
+
   // Add tooltip with definition if available
   if (wordData.defs && wordData.defs.length > 0) {
     const definition = wordData.defs[0].replace(/\t/g, ': ');
@@ -79,7 +79,7 @@ function createResultElement(wordData) {
     li.setAttribute('title', definition);
     li.setAttribute('aria-label', `${wordData.word}: ${definition}`);
   }
-  
+
   // Add click event to add word to textarea
   li.addEventListener('click', () => {
     // Insert at cursor position if possible
@@ -87,26 +87,26 @@ function createResultElement(wordData) {
     const currentText = textareaElement.value;
     const textBefore = currentText.substring(0, cursorPosition);
     const textAfter = currentText.substring(cursorPosition);
-    
+
     // Add a space before the word if not at beginning or if previous char isn't a space
     const spaceBefore = (cursorPosition === 0 || textBefore.endsWith(' ')) ? '' : ' ';
-    
+
     textareaElement.value = textBefore + spaceBefore + wordData.word + textAfter;
-    
+
     // Set cursor position after inserted word
     const newPosition = cursorPosition + spaceBefore.length + wordData.word.length;
     textareaElement.setSelectionRange(newPosition, newPosition);
     textareaElement.focus();
-    
+
     // Keep track of selected words for AI context
     selectedWords.push(wordData.word);
-    
+
     // Limit the history to last 10 words
     if (selectedWords.length > 10) {
       selectedWords.shift();
     }
   });
-  
+
   return li;
 }
 
@@ -118,26 +118,26 @@ function displayResults(words) {
   // Clear previous results
   resultsContainer.innerHTML = '';
   noResultsAlert.classList.add('d-none');
-  
+
   if (words.length === 0) {
     noResultsAlert.classList.remove('d-none');
     resultsHeading.classList.add('d-none');
     return;
   }
-  
+
   // Show results heading
   resultsHeading.classList.remove('d-none');
-  
+
   // Create document fragment for better performance
   const fragment = document.createDocumentFragment();
-  
+
   words.forEach(wordData => {
     const element = createResultElement(wordData);
     fragment.appendChild(element);
   });
-  
+
   resultsContainer.appendChild(fragment);
-  
+
   // Initialize Bootstrap tooltips
   const tooltips = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
   tooltips.forEach(el => {
@@ -151,21 +151,21 @@ function displayResults(words) {
  */
 async function handleFormSubmit(event) {
   event.preventDefault();
-  
+
   const searchParam = optionsSelect.value;
   const searchWord = userWordInput.value.trim();
-  
+
   if (!searchWord) {
     userWordInput.focus();
     return;
   }
-  
+
   // Show loading indicator
   loadingSpinner.style.display = 'inline-block';
   resultsContainer.innerHTML = '';
   resultsHeading.classList.add('d-none');
   noResultsAlert.classList.add('d-none');
-  
+
   try {
     const data = await fetchWords(searchParam, searchWord);
     const filteredData = filterResultsWithDefinitions(data);
@@ -184,8 +184,8 @@ async function handleFormSubmit(event) {
  */
 function clearTextarea() {
   textareaElement.value = '';
-  resultsContainer.innerHTML="";
-  userWordInput.value=null;
+  resultsContainer.innerHTML = "";
+  userWordInput.value = null;
   selectedWords = [];
 }
 
@@ -194,17 +194,17 @@ function clearTextarea() {
  */
 async function copyToClipboard() {
   const text = textareaElement.value;
-  
+
   if (!text.trim()) return;
-  
+
   try {
     await navigator.clipboard.writeText(text);
-    
+
     // Visual feedback for successful copy
     const originalText = copyTextBtn.textContent;
     copyTextBtn.textContent = 'Copied!';
     copyTextBtn.classList.replace('btn-outline-primary', 'btn-success');
-    
+
     setTimeout(() => {
       copyTextBtn.textContent = originalText;
       copyTextBtn.classList.replace('btn-success', 'btn-outline-primary');
@@ -219,21 +219,21 @@ async function copyToClipboard() {
  */
 async function getAISuggestions() {
   const currentText = textareaElement.value.trim();
-  
+
   if (!currentText) {
     // Show a message that we need some text
     createAlert('Please write some text first to get suggestions', 'warning');
     return;
   }
-  
+
   toggleAILoading(true);
-  
+
   try {
     const suggestionData = await fetchFromAI({
       prompt: `Based on this poem draft: "${currentText}"\n\nProvide 3-5 suggestions for how to continue or improve this poem. Consider rhythm, theme, and emotional tone. Format as a bulleted list of short, specific ideas.`,
       max_tokens: 150
     });
-    
+
     displaySuggestions(suggestionData);
   } catch (error) {
     console.error('AI suggestion error:', error);
@@ -248,23 +248,23 @@ async function getAISuggestions() {
  */
 async function getAICompletion() {
   const currentText = textareaElement.value.trim();
-  
+
   if (!currentText) {
     createAlert('Please write some text first for AI to complete', 'warning');
     return;
   }
-  
+
   toggleAILoading(true);
-  
+
   try {
     const completionData = await fetchFromAI({
       prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 2-4 more lines.`,
       max_tokens: 200
     });
-    
+
     // Append the completion to the existing text
     textareaElement.value = `${currentText}\n${completionData.trim()}`;
-    
+
     // Create a success message
     createAlert('AI completion added!', 'success');
   } catch (error) {
@@ -282,7 +282,7 @@ async function getAICompletion() {
  */
 function createAlert(message, type = 'info') {
   const alertContainer = document.getElementById('alertContainer');
-  
+
   const alert = document.createElement('div');
   alert.className = `alert alert-${type} alert-dismissible fade show`;
   alert.setAttribute('role', 'alert');
@@ -290,9 +290,9 @@ function createAlert(message, type = 'info') {
     ${message}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   `;
-  
+
   alertContainer.appendChild(alert);
-  
+
   // Auto-remove after 5 seconds
   setTimeout(() => {
     const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
@@ -307,31 +307,31 @@ function createAlert(message, type = 'info') {
 function displaySuggestions(suggestionText) {
   // Clear previous suggestions
   suggestionsContainer.innerHTML = '';
-  
+
   // Create the suggestions card
   const card = document.createElement('div');
   card.className = 'card mb-3';
-  
+
   const cardHeader = document.createElement('div');
   cardHeader.className = 'card-header d-flex justify-content-between align-items-center';
   cardHeader.innerHTML = `
     <h3 class="h6 mb-0">AI Suggestions</h3>
     <button type="button" class="btn-close" aria-label="Close" id="closeSuggestions"></button>
   `;
-  
+
   const cardBody = document.createElement('div');
   cardBody.className = 'card-body';
   cardBody.innerHTML = `<div class="suggestions-text">${suggestionText}</div>`;
-  
+
   card.appendChild(cardHeader);
   card.appendChild(cardBody);
   suggestionsContainer.appendChild(card);
-  
+
   // Add close button functionality
   document.getElementById('closeSuggestions').addEventListener('click', () => {
     suggestionsContainer.innerHTML = '';
   });
-  
+
   // Make the entire suggestion text clickable to use it
   const suggestions = cardBody.querySelectorAll('li, p');
   suggestions.forEach(suggestion => {
@@ -342,7 +342,7 @@ function displaySuggestions(suggestionText) {
       const suggestionText = suggestion.textContent.trim();
       textareaElement.value += `\n${suggestionText}`;
       textareaElement.focus();
-      
+
       // Scroll to bottom of textarea
       textareaElement.scrollTop = textareaElement.scrollHeight;
     });
@@ -372,28 +372,28 @@ function toggleAILoading(isLoading) {
  */
 async function fetchFromAI(options) {
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`
+        "Authorization": "Bearer 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",
+        "HTTP-Referer": "<YOUR_SITE_URL>", // Optional. Site URL for rankings on openrouter.ai.
+        "X-Title": "<YOUR_SITE_NAME>", // Optional. Site title for rankings on openrouter.ai.
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: AI_MODEL,
-        messages: [
+        "model": "mistralai/mistral-7b-instruct:free",
+        "messages": [
           { role: "system", content: AI_CONTEXT },
           { role: "user", content: options.prompt }
-        ],
-        max_tokens: options.max_tokens || 100,
-        temperature: options.temperature || 0.7
+        ]
       })
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error?.message || 'AI API request failed');
     }
-    
+
     const data = await response.json();
     return data.choices[0].message.content;
   } catch (error) {
@@ -407,20 +407,20 @@ async function fetchFromAI(options) {
  */
 async function getRelatedTopics() {
   const currentText = textareaElement.value.trim();
-  
+
   if (!currentText) {
     createAlert('Please write some text first', 'warning');
     return;
   }
-  
+
   toggleAILoading(true);
-  
+
   try {
     const topicsData = await fetchFromAI({
       prompt: `Based on this poem draft: "${currentText}"\n\nIdentify 5 related topics, themes, or imagery that could enhance this poem. Format as a bulleted list.`,
       max_tokens: 150
     });
-    
+
     // Display topics in a special section
     const topicsContainer = document.getElementById('topicsContainer');
     topicsContainer.innerHTML = `
@@ -446,24 +446,24 @@ async function getRelatedTopics() {
  */
 async function analyzePoem() {
   const currentText = textareaElement.value.trim();
-  
+
   if (!currentText) {
     createAlert('Please write a poem first for analysis', 'warning');
     return;
   }
-  
+
   toggleAILoading(true);
-  
+
   try {
     const analysisData = await fetchFromAI({
       prompt: `Analyze this poem draft: "${currentText}"\n\nProvide brief feedback on: 1) Rhythm/meter, 2) Imagery, 3) Theme coherence, and 4) One specific suggestion for improvement.`,
       max_tokens: 250
     });
-    
+
     // Show analysis in modal
     const modalBody = document.getElementById('poemAnalysisBody');
     modalBody.innerHTML = `<div class="poem-analysis">${analysisData}</div>`;
-    
+
     // Show the modal
     const poemAnalysisModal = new bootstrap.Modal(document.getElementById('poemAnalysisModal'));
     poemAnalysisModal.show();
@@ -490,7 +490,7 @@ document.addEventListener('keydown', (event) => {
   if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' && document.activeElement === userWordInput) {
     wordFinderForm.requestSubmit();
   }
-  
+
   // Ctrl/Cmd + Shift + S for AI suggestions
   if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'S') {
     event.preventDefault();
@@ -503,9 +503,9 @@ document.addEventListener('keydown', (event) => {
 // Focus the input field on page load
 window.addEventListener('load', () => {
   userWordInput.focus();
-  
+
   // Check if API key is configured
-  if (OPENAI_API_KEY === 'YOUR_OPENAI_API_KEY') {
+  if (OPENAI_API_KEY === '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') {
     // Disable AI features if no API key is provided
     const aiFeatures = document.getElementById('aiFeatures');
     if (aiFeatures) {
@@ -516,7 +516,7 @@ window.addEventListener('load', () => {
         </div>
       `;
     }
-    
+
     // Disable AI buttons
     if (aiSuggestBtn) aiSuggestBtn.disabled = true;
     if (aiCompletionBtn) aiCompletionBtn.disabled = true;
