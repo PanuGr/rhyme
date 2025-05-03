@@ -89,7 +89,10 @@ body {
 
 .features-card {
   border-left: 4px solid var(--accent-color);
-  margin-bottom: 1.5rem;
+}
+
+.bg-purple {
+  background-color: var(--accent-color);
 }
 
 .suggestions-text ul li {
