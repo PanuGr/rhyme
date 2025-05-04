@@ -21,3 +21,6 @@ This version integrates AI into this application. The AI is providing creative a
 ## Future Enhancements
 - Add local storage to save drafts of poems
 - Add the ability to share poems directly to social media
+
+## Site
+The AI-powered version can be found at: https://rhymeai.netlify.app
