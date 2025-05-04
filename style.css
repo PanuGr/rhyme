@@ -96,13 +96,6 @@ body {
   background-color: var(--accent-color);
 }
 
-.suggestions-text {
-  line-height: 1.6;
-  font-size: large;
-
-}
-
-
 .poem-analysis {
   white-space: pre-line;
 }

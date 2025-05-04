@@ -15,7 +15,6 @@ const clearTextBtn = document.getElementById('clearTextBtn');
 const copyTextBtn = document.getElementById('copyTextBtn');
 const aiCompletionBtn = document.getElementById('aiCompletionBtn');
 const aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
-const suggestionsContainer = document.getElementById('suggestionsContainer');
 
 // AI-API configuration
 const API_KEY = process.env.RhymeAI;
@@ -358,7 +357,6 @@ clearTextBtn.addEventListener('click', clearTextarea);
 copyTextBtn.addEventListener('click', copyToClipboard);
 aiCompletionBtn?.addEventListener('click', getAICompletion);
 document.getElementById('analyzeBtn')?.addEventListener('click', analyzePoem);
-document.getElementById('topicsBtn')?.addEventListener('click', getRelatedTopics);
 
 // Add keyboard shortcuts 
 document.addEventListener('keydown', (event) => {
