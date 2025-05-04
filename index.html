@@ -77,17 +77,11 @@
               </div>
               <div class="card-body">
                 <div class="d-grid gap-2">
-                  <button type="button" class="btn btn-outline-secondary text-start" id="aiSuggestBtn">
-                    <i class="bi bi-lightbulb"></i> Get Line Suggestions
-                  </button>
                   <button type="button" class="btn btn-outline-secondary text-start" id="aiCompletionBtn">
                     <i class="bi bi-pencil-square"></i> Complete My Poem
                   </button>
                   <button type="button" class="btn btn-outline-secondary text-start" id="analyzeBtn">
                     <i class="bi bi-search"></i> Analyze Structure
-                  </button>
-                  <button type="button" class="btn btn-outline-secondary text-start" id="topicsBtn">
-                    <i class="bi bi-list-stars"></i> Find Related Themes
                   </button>
                 </div>
               </div>
@@ -109,12 +103,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- Suggestions container -->
-            <div id="suggestionsContainer" class="mb-4"></div>
-
-            <!-- Topics container -->
-            <div id="topicsContainer" class="mb-4"></div>
           </div>
         </div>
 
@@ -137,8 +125,8 @@
     </main>
 
     <footer class="mt-4 mb-3 text-center">
-      <small class="text-dark">Created with ❤️ by <a href="http://digisolutech.netlify.app" class="link-dark" target="_blank"
-          rel="noopener">DigiSolutions</a>
+      <small class="text-dark">Created with ❤️ by <a href="http://digisolutech.netlify.app" class="link-dark"
+          target="_blank" rel="noopener">DigiSolutions</a>
       </small>
     </footer>
   </div>
@@ -154,8 +142,7 @@
   </div>
 
   <!-- Poem Analysis Modal -->
-  <div class="modal fade" id="poemAnalysisModal" tabindex="-1" aria-labelledby="poemAnalysisModalLabel"
-    aria-hidden="true">
+  <div class="modal fade" id="poemAnalysisModal" tabindex="-1" aria-labelledby="poemAnalysisModalLabel">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">

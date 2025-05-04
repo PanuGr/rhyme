@@ -13,7 +13,6 @@ const noResultsAlert = document.getElementById('noResultsAlert');
 const resultsHeading = document.getElementById('resultsHeading');
 const clearTextBtn = document.getElementById('clearTextBtn');
 const copyTextBtn = document.getElementById('copyTextBtn');
-const aiSuggestBtn = document.getElementById('aiSuggestBtn');
 const aiCompletionBtn = document.getElementById('aiCompletionBtn');
 const aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
 const suggestionsContainer = document.getElementById('suggestionsContainer');
@@ -239,83 +238,6 @@ function createAlert(message, type = 'info') {
 }
 
 /**
- * Get AI-powered suggestions for writing
- */
-async function getAISuggestions() {
-  const currentText = textareaElement.value.trim();
-
-  if (!currentText) {
-    // Show a message that we need some text
-    createAlert('Please write some text first to get suggestions', 'warning');
-    return;
-  }
-
-  toggleAILoading(true);
-
-  try {
-    const suggestionData = await fetchFromAI({
-      prompt: `Based on this poem draft: "${currentText}"\n\nProvide 3 suggestions for how to continue or improve this poem. Consider rhythm, theme, and emotional tone. Format your answer as an easy-to-read text with short, specific ideas. Don't use bold titles. `
-    });
-
-    displaySuggestions(suggestionData);
-  } catch (error) {
-    console.error('AI suggestion error:', error);
-    createAlert('Unable to get AI suggestions at this time', 'danger');
-  } finally {
-    toggleAILoading(false);
-  }
-}
-
-/**
- * Display AI suggestions in the suggestions container
- * @param {string} suggestionText - The suggestion text from AI
- */
-function displaySuggestions(suggestionText) {
-  // Clear previous suggestions
-  suggestionsContainer.innerHTML = '';
-
-  // Create the suggestions card
-  const card = document.createElement('div');
-  card.className = 'card mb-3';
-
-  const cardHeader = document.createElement('div');
-  cardHeader.className = 'card-header d-flex justify-content-between align-items-center';
-  cardHeader.innerHTML = `
-    <h3 class="h6 mb-0">AI Suggestions</h3>
-    <button type="button" class="btn-close" aria-label="Close" id="closeSuggestions"></button>
-  `;
-
-  const cardBody = document.createElement('div');
-  cardBody.className = 'card-body';
-  cardBody.innerHTML = `<div class="suggestions-text">${suggestionText}</div>`;
-
-  card.appendChild(cardHeader);
-  card.appendChild(cardBody);
-  suggestionsContainer.appendChild(card);
-
-  // Add close button functionality
-  document.getElementById('closeSuggestions').addEventListener('click', () => {
-    suggestionsContainer.innerHTML = '';
-  });
-
-  // Make the entire suggestion text clickable to use it
-  const suggestions = cardBody.querySelectorAll('li, p');
-  suggestions.forEach(suggestion => {
-    suggestion.style.cursor = 'pointer';
-    suggestion.title = 'Click to use this suggestion';
-    suggestion.addEventListener('click', () => {
-      // Append the suggestion text to textarea
-      const suggestionText = suggestion.textContent.trim();
-      textareaElement.value += `\n${suggestionText}`;
-      textareaElement.focus();
-
-      // Scroll to bottom of textarea
-      textareaElement.scrollTop = textareaElement.scrollHeight;
-    });
-  });
-}
-
-/**
  * Get AI-powered poem completion
  */
 async function getAICompletion() {
@@ -345,44 +267,6 @@ async function getAICompletion() {
   }
 }
 
-
-/**
- * Get related topics based on the current poem content
- */
-async function getRelatedTopics() {
-  const currentText = textareaElement.value.trim();
-
-  if (!currentText) {
-    createAlert('Please write some text first', 'warning');
-    return;
-  }
-
-  toggleAILoading(true);
-
-  try {
-    const topicsData = await fetchFromAI({
-      prompt: `Based on this poem draft: "${currentText}"\n\nIdentify 3 related topics, themes, or imagery that could enhance this poem. Format as a bulleted list.`
-    });
-
-    // Display topics in a special section
-    const topicsContainer = document.getElementById('topicsContainer');
-    topicsContainer.innerHTML = `
-      <div class="card mb-3">
-        <div class="card-header bg-info text-white">
-          <h3 class="h6 mb-0">Related Topics & Themes</h3>
-        </div>
-        <div class="card-body">
-          ${topicsData}
-        </div>
-      </div>
-    `;
-  } catch (error) {
-    console.error('AI topics error:', error);
-    createAlert('Unable to get related topics at this time', 'danger');
-  } finally {
-    toggleAILoading(false);
-  }
-}
 
 /**
  * Analyze the poem structure and provide feedback
@@ -424,11 +308,9 @@ async function analyzePoem() {
 function toggleAILoading(isLoading) {
   if (isLoading) {
     aiLoadingIndicator.style.display = 'flex';
-    aiSuggestBtn.disabled = true;
     aiCompletionBtn.disabled = true;
   } else {
     aiLoadingIndicator.style.display = 'none';
-    aiSuggestBtn.disabled = false;
     aiCompletionBtn.disabled = false;
   }
 }
@@ -474,7 +356,6 @@ async function fetchFromAI(options) {
 wordFinderForm.addEventListener('submit', handleFormSubmit);
 clearTextBtn.addEventListener('click', clearTextarea);
 copyTextBtn.addEventListener('click', copyToClipboard);
-aiSuggestBtn?.addEventListener('click', getAISuggestions);
 aiCompletionBtn?.addEventListener('click', getAICompletion);
 document.getElementById('analyzeBtn')?.addEventListener('click', analyzePoem);
 document.getElementById('topicsBtn')?.addEventListener('click', getRelatedTopics);
@@ -484,14 +365,6 @@ document.addEventListener('keydown', (event) => {
   // Ctrl/Cmd + Enter to search
   if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' && document.activeElement === userWordInput) {
     wordFinderForm.requestSubmit();
-  }
-
-  // Ctrl/Cmd + Shift + S for AI suggestions
-  if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'S') {
-    event.preventDefault();
-    if (aiSuggestBtn && !aiSuggestBtn.disabled) {
-      getAISuggestions();
-    }
   }
 });
 
