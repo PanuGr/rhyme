@@ -2,6 +2,7 @@
  * Poetry Assistant with AI - Enhanced word finder tool
  * Helps find rhyming and related words using Datamuse API with AI-powered suggestions
  */
+import {savePoem, loadPoem} from './modules/saveLoadPoem';
 // DOM Elements
 const wordFinderForm = document.getElementById('wordFinderForm');
 const userWordInput = document.getElementById('userWord');
@@ -11,10 +12,13 @@ const textareaElement = document.getElementById('textarea');
 const loadingSpinner = document.getElementById('loadingSpinner');
 const noResultsAlert = document.getElementById('noResultsAlert');
 const resultsHeading = document.getElementById('resultsHeading');
+const saveTextBtn = document.getElementById('saveTextBtn');
 const clearTextBtn = document.getElementById('clearTextBtn');
 const copyTextBtn = document.getElementById('copyTextBtn');
 const aiCompletionBtn = document.getElementById('aiCompletionBtn');
+const analyzeBtn= document.getElementById('analyzeBtn');
 const aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
+
 
 // AI-API configuration
 const API_KEY = process.env.RhymeAI;
@@ -355,18 +359,12 @@ async function fetchFromAI(options) {
 wordFinderForm.addEventListener('submit', handleFormSubmit);
 clearTextBtn.addEventListener('click', clearTextarea);
 copyTextBtn.addEventListener('click', copyToClipboard);
-aiCompletionBtn?.addEventListener('click', getAICompletion);
-document.getElementById('analyzeBtn')?.addEventListener('click', analyzePoem);
-
-// Add keyboard shortcuts 
-document.addEventListener('keydown', (event) => {
-  // Ctrl/Cmd + Enter to search
-  if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' && document.activeElement === userWordInput) {
-    wordFinderForm.requestSubmit();
-  }
-});
+aiCompletionBtn.addEventListener('click', getAICompletion);
+analyzeBtn.addEventListener('click', analyzePoem);
+saveTextBtn.addEventListener('click',()=>savePoem(textareaElement.value));
 
 // Focus the input field on page load
 window.addEventListener('load', () => {
+  loadPoem();
   userWordInput.focus();
 });
