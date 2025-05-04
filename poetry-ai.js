@@ -2,9 +2,6 @@
  * Poetry Assistant with AI - Enhanced word finder tool
  * Helps find rhyming and related words using Datamuse API with AI-powered suggestions
  */
-const API_KEY  = process.env.RhymeAI;
-console.log(API_KEY)
-
 // DOM Elements
 const wordFinderForm = document.getElementById('wordFinderForm');
 const userWordInput = document.getElementById('userWord');
@@ -21,9 +18,9 @@ const aiCompletionBtn = document.getElementById('aiCompletionBtn');
 const aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
 const suggestionsContainer = document.getElementById('suggestionsContainer');
 
-// OpenAI API configuration - Replace with your own API key and endpoint
-const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY";  // In production, use environment variables
-const AI_MODEL = "gpt-3.5-turbo";
+// AI-API configuration
+const API_KEY = process.env.RhymeAI;
+const AI_MODEL = "mistralai/mistral-7b-instruct:free";
 
 // Word history to track what the user has selected
 let selectedWords = [];
@@ -217,6 +214,56 @@ async function copyToClipboard() {
 }
 
 /**
+ * Creates an alert message
+ * @param {string} message - The message to display
+ * @param {string} type - The Bootstrap alert type (success, danger, etc.)
+ */
+function createAlert(message, type = 'info') {
+  const alertContainer = document.getElementById('alertContainer');
+
+  const alert = document.createElement('div');
+  alert.className = `alert alert-${type} alert-dismissible fade show`;
+  alert.setAttribute('role', 'alert');
+  alert.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  `;
+
+  alertContainer.appendChild(alert);
+
+  // Auto-remove after 10 seconds
+  setTimeout(() => {
+    const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+    bsAlert.close();
+  }, 10000);
+}
+
+/**
+ * Creates an alert message
+ * @param {string} message - The message to display
+ * @param {string} type - The Bootstrap alert type (success, danger, etc.)
+ */
+function createAlert(message, type = 'info') {
+  const alertContainer = document.getElementById('alertContainer');
+
+  const alert = document.createElement('div');
+  alert.className = `alert alert-${type} alert-dismissible fade show`;
+  alert.setAttribute('role', 'alert');
+  alert.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  `;
+
+  alertContainer.appendChild(alert);
+
+  // Auto-remove after 10 seconds
+  setTimeout(() => {
+    const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+    bsAlert.close();
+  }, 10000);
+}
+
+/**
  * Get AI-powered suggestions for writing
  */
 async function getAISuggestions() {
@@ -275,30 +322,6 @@ async function getAICompletion() {
   }
 }
 
-/**
- * Creates an alert message
- * @param {string} message - The message to display
- * @param {string} type - The Bootstrap alert type (success, danger, etc.)
- */
-function createAlert(message, type = 'info') {
-  const alertContainer = document.getElementById('alertContainer');
-
-  const alert = document.createElement('div');
-  alert.className = `alert alert-${type} alert-dismissible fade show`;
-  alert.setAttribute('role', 'alert');
-  alert.innerHTML = `
-    ${message}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  `;
-
-  alertContainer.appendChild(alert);
-
-  // Auto-remove after 10 seconds
-  setTimeout(() => {
-    const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-    bsAlert.close();
-  }, 10000);
-}
 
 /**
  * Display AI suggestions in the suggestions container
@@ -350,27 +373,18 @@ function displaySuggestions(suggestionText) {
 }
 
 /**
- * Toggle the AI loading indicator
- * @param {boolean} isLoading - Whether the AI is loading
+ * Get AI-powered poem completion
  */
-function toggleAILoading(isLoading) {
-  if (isLoading) {
-    aiLoadingIndicator.style.display = 'flex';
-    aiSuggestBtn.disabled = true;
-    aiCompletionBtn.disabled = true;
-  } else {
-    aiLoadingIndicator.style.display = 'none';
-    aiSuggestBtn.disabled = false;
-    aiCompletionBtn.disabled = false;
-  }
-}
+async function getAICompletion() {
+  const currentText = textareaElement.value.trim();
 
-/**
- * Fetch from OpenAI API
- * @param {Object} options - Options for the API request
- * @returns {Promise<string>} - The AI response text
- */
-async function fetchFromAI(options) {
+  if (!currentText) {
+    createAlert('Please write some text first for AI to complete', 'warning');
+    return;
+  }
+
+  toggleAILoading(true);
+
   try {
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
@@ -397,8 +411,10 @@ async function fetchFromAI(options) {
     const data = await response.json();
     return data.choices[0].message.content;
   } catch (error) {
-    console.error('AI API error:', error);
-    throw error;
+    console.error('AI completion error:', error);
+    createAlert('Unable to get AI completion at this time', 'danger');
+  } finally {
+    toggleAILoading(false);
   }
 }
 
@@ -470,6 +486,59 @@ async function analyzePoem() {
     createAlert('Unable to analyze poem at this time', 'danger');
   } finally {
     toggleAILoading(false);
+  }
+}
+
+/**
+ * Toggle the AI loading indicator
+ * @param {boolean} isLoading - Whether the AI is loading
+ */
+function toggleAILoading(isLoading) {
+  if (isLoading) {
+    aiLoadingIndicator.style.display = 'flex';
+    aiSuggestBtn.disabled = true;
+    aiCompletionBtn.disabled = true;
+  } else {
+    aiLoadingIndicator.style.display = 'none';
+    aiSuggestBtn.disabled = false;
+    aiCompletionBtn.disabled = false;
+  }
+}
+
+/**
+ * Fetch from OpenAI API
+ * @param {Object} options - Options for the API request
+ * @returns {Promise<string>} - The AI response text
+ */
+async function fetchFromAI(options) {
+  try {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "HTTP-Referer": "<YOUR_SITE_URL>", // Optional. Site URL for rankings on openrouter.ai.
+        "X-Title": "<YOUR_SITE_NAME>", // Optional. Site title for rankings on openrouter.ai.
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "model": `${AI_MODEL}`,
+        "messages": [
+          { role: "system", content: AI_CONTEXT },
+          { role: "user", content: options.prompt }
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || 'AI API request failed');
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content;
+  } catch (error) {
+    console.error('AI API error:', error);
+    throw error;
   }
 }
 
