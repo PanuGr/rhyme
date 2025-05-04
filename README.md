@@ -37,3 +37,7 @@ New updates include:
 - Visual Feedback: Added loading indicators and success/error messages
 - Tooltip Enhancement: Improved tooltip display for word definitions
 - Mobile-Friendly UI: Made the interface work well on mobile devices
+
+## Version 3
+This version includes AI integration. You can find more on the v3 branch. 
+This version is hosted on Netlify at https://rhymeai.netlify.app
