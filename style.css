@@ -12,6 +12,7 @@ body {
   background-size: cover;
   background-position: center;
   min-height: 100vh;
+  font-family: 'Segoe UI';
 }
 
 .results-container {
@@ -95,16 +96,12 @@ body {
   background-color: var(--accent-color);
 }
 
-.suggestions-text ul li {
-  cursor: pointer;
-  padding: 0.25rem 0;
-  transition: background-color 150ms ease;
+.suggestions-text {
+  line-height: 1.6;
+  font-size: large;
+
 }
 
-.suggestions-text ul li:hover {
-  background-color: #f8f9fa;
-  border-radius: 4px;
-}
 
 .poem-analysis {
   white-space: pre-line;

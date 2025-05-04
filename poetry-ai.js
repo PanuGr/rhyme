@@ -21,12 +21,12 @@ const suggestionsContainer = document.getElementById('suggestionsContainer');
 // AI-API configuration
 const API_KEY = process.env.RhymeAI;
 const AI_MODEL = "mistralai/mistral-7b-instruct:free";
+// Default prompt context for AI
+const AI_CONTEXT = `You are a helpful poetry writing assistant. Your task is to help users write better poems by offering suggestions based on the words they've selected and the theme of their writing.`;
 
 // Word history to track what the user has selected
 let selectedWords = [];
 
-// Default prompt context for AI
-const AI_CONTEXT = `You are a helpful poetry writing assistant. Your task is to help users write better poems by offering suggestions based on the words they've selected and the theme of their writing.`;
 
 /**
  * Fetches words from the Datamuse API based on user input
@@ -239,31 +239,6 @@ function createAlert(message, type = 'info') {
 }
 
 /**
- * Creates an alert message
- * @param {string} message - The message to display
- * @param {string} type - The Bootstrap alert type (success, danger, etc.)
- */
-function createAlert(message, type = 'info') {
-  const alertContainer = document.getElementById('alertContainer');
-
-  const alert = document.createElement('div');
-  alert.className = `alert alert-${type} alert-dismissible fade show`;
-  alert.setAttribute('role', 'alert');
-  alert.innerHTML = `
-    ${message}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  `;
-
-  alertContainer.appendChild(alert);
-
-  // Auto-remove after 10 seconds
-  setTimeout(() => {
-    const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-    bsAlert.close();
-  }, 10000);
-}
-
-/**
  * Get AI-powered suggestions for writing
  */
 async function getAISuggestions() {
@@ -279,7 +254,7 @@ async function getAISuggestions() {
 
   try {
     const suggestionData = await fetchFromAI({
-      prompt: `Based on this poem draft: "${currentText}"\n\nProvide 3 suggestions for how to continue or improve this poem. Consider rhythm, theme, and emotional tone. Format as a bulleted list of short, specific ideas.`
+      prompt: `Based on this poem draft: "${currentText}"\n\nProvide 3 suggestions for how to continue or improve this poem. Consider rhythm, theme, and emotional tone. Format your answer as an easy-to-read text with short, specific ideas. Don't use bold titles. `
     });
 
     displaySuggestions(suggestionData);
@@ -338,37 +313,6 @@ function displaySuggestions(suggestionText) {
       textareaElement.scrollTop = textareaElement.scrollHeight;
     });
   });
-}
-
-/**
- * Get AI-powered poem completion
- */
-async function getAICompletion() {
-  const currentText = textareaElement.value.trim();
-
-  if (!currentText) {
-    createAlert('Please write some text first for AI to complete', 'warning');
-    return;
-  }
-
-  toggleAILoading(true);
-
-  try {
-    const completionData = await fetchFromAI({
-      prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 3 more lines.`
-    });
-
-    // Append the completion to the existing text
-    textareaElement.value = `${currentText}\n${completionData.trim()}`;
-
-    // Create a success message
-    createAlert('AI completion added!', 'success');
-  } catch (error) {
-    console.error('AI completion error:', error);
-    createAlert('Unable to get AI completion at this time', 'danger');
-  } finally {
-    toggleAILoading(false);
-  }
 }
 
 /**
@@ -500,8 +444,8 @@ async function fetchFromAI(options) {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${API_KEY}`,
-        "HTTP-Referer": "<YOUR_SITE_URL>", // Optional. Site URL for rankings on openrouter.ai.
-        "X-Title": "<YOUR_SITE_NAME>", // Optional. Site title for rankings on openrouter.ai.
+        "HTTP-Referer": "https://rhymeai.netlify.app", // Optional. Site URL for rankings on openrouter.ai.
+        "X-Title": "RhymeAi", // Optional. Site title for rankings on openrouter.ai.
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
