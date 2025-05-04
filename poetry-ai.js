@@ -292,38 +292,6 @@ async function getAISuggestions() {
 }
 
 /**
- * Get AI-powered poem completion
- */
-async function getAICompletion() {
-  const currentText = textareaElement.value.trim();
-
-  if (!currentText) {
-    createAlert('Please write some text first for AI to complete', 'warning');
-    return;
-  }
-
-  toggleAILoading(true);
-
-  try {
-    const completionData = await fetchFromAI({
-      prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 3 more lines.`
-    });
-
-    // Append the completion to the existing text
-    textareaElement.value = `${currentText}\n${completionData.trim()}`;
-
-    // Create a success message
-    createAlert('AI completion added!', 'success');
-  } catch (error) {
-    console.error('AI completion error:', error);
-    createAlert('Unable to get AI completion at this time', 'danger');
-  } finally {
-    toggleAILoading(false);
-  }
-}
-
-
-/**
  * Display AI suggestions in the suggestions container
  * @param {string} suggestionText - The suggestion text from AI
  */
@@ -386,30 +354,15 @@ async function getAICompletion() {
   toggleAILoading(true);
 
   try {
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "HTTP-Referer": "<YOUR_SITE_URL>", // Optional. Site URL for rankings on openrouter.ai.
-        "X-Title": "<YOUR_SITE_NAME>", // Optional. Site title for rankings on openrouter.ai.
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "model": "mistralai/mistral-7b-instruct:free",
-        "messages": [
-          { role: "system", content: AI_CONTEXT },
-          { role: "user", content: options.prompt }
-        ]
-      })
+    const completionData = await fetchFromAI({
+      prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 3 more lines.`
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || 'AI API request failed');
-    }
+    // Append the completion to the existing text
+    textareaElement.value = `${currentText}\n${completionData.trim()}`;
 
-    const data = await response.json();
-    return data.choices[0].message.content;
+    // Create a success message
+    createAlert('AI completion added!', 'success');
   } catch (error) {
     console.error('AI completion error:', error);
     createAlert('Unable to get AI completion at this time', 'danger');
@@ -417,6 +370,37 @@ async function getAICompletion() {
     toggleAILoading(false);
   }
 }
+
+/**
+ * Get AI-powered poem completion
+ */
+async function getAICompletion() {
+  const currentText = textareaElement.value.trim();
+
+  if (!currentText) {
+    createAlert('Please write some text first for AI to complete', 'warning');
+    return;
+  }
+
+  toggleAILoading(true);
+
+  try {
+    const completionData = await fetchFromAI({
+      prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 3 more lines.`});
+
+    // Append the completion to the existing text
+    textareaElement.value = `${currentText}\n${completionData.trim()}`;
+
+    // Create a success message
+    createAlert('AI completion added!', 'success');
+  } catch (error) {
+    console.error('AI completion error:', error);
+    createAlert('Unable to get AI completion at this time', 'danger');
+  } finally {
+    toggleAILoading(false);
+  }
+}
+
 
 /**
  * Get related topics based on the current poem content
