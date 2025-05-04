@@ -5,7 +5,8 @@
   "source": "index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build"
+    "build": "parcel build",
+    "safe": "parcel --https"
   },
   "keywords": [],
   "author": "",
