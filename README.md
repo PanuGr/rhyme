@@ -12,15 +12,9 @@ Updates include:
 
 ## Version 3
 This version integrates AI into this application. The AI is providing creative assistance:
-- Line Suggestions: Get AI-powered suggestions for your next lines
 - Poem Completion: Have AI complete your poem based on what you've written
 - Structure Analysis: Get feedback on rhythm, imagery, and coherence
-- Theme Discovery: Find related themes and topics for your poem
 - Two-Panel Interface: Separated word finding from composition for better workflow
-
-## Future Enhancements
-- Add local storage to save drafts of poems
-- Add the ability to share poems directly to social media
 
 ## Site
 The AI-powered version can be found at: https://rhymeai.netlify.app
