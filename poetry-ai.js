@@ -257,7 +257,7 @@ async function getAICompletion() {
 
   try {
     const completionData = await fetchFromAI({
-      prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 3 more lines.`, max_tokens: 100
+      prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 3 more lines.`, tokens: 100
     });
 
     // Append the completion to the existing text
@@ -289,8 +289,7 @@ async function analyzePoem() {
 
   try {
     const analysisData = await fetchFromAI({
-      prompt: `Analyze this poem draft: "${currentText}"\n\nProvide brief feedback on: 1) Rhythm/meter, 2) Imagery, 3) Theme coherence, and 4) One specific suggestion for improvement.`, max_tokens: 200
-    });
+      prompt: `Analyze this poem draft: "${currentText}"\n\nProvide brief, short feedback on: 1) Rhythm/meter, 2) Imagery, 3) Theme coherence, and 4) One specific suggestion for improvement.`});
 
     // Show analysis in modal
     const modalBody = document.getElementById('poemAnalysisBody');
@@ -341,7 +340,8 @@ async function fetchFromAI(options) {
         "messages": [
           { role: "system", content: AI_CONTEXT },
           { role: "user", content: options.prompt }
-        ]
+        ],
+        max_tokens: options.tokens
       })
     });
 
