@@ -255,7 +255,7 @@ async function getAICompletion() {
 
   try {
     const completionData = await fetchFromAI({
-      prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 3 more lines.`});
+      prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 3 more lines.`, max_tokens:100});
 
     // Append the completion to the existing text
     textareaElement.value = `${currentText}\n${completionData.trim()}`;
@@ -286,7 +286,7 @@ async function analyzePoem() {
 
   try {
     const analysisData = await fetchFromAI({
-      prompt: `Analyze this poem draft: "${currentText}"\n\nProvide brief feedback on: 1) Rhythm/meter, 2) Imagery, 3) Theme coherence, and 4) One specific suggestion for improvement.`
+      prompt: `Analyze this poem draft: "${currentText}"\n\nProvide brief feedback on: 1) Rhythm/meter, 2) Imagery, 3) Theme coherence, and 4) One specific suggestion for improvement.`, max_tokens: 200
     });
 
     // Show analysis in modal
