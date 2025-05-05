@@ -2,7 +2,8 @@
  * Poetry Assistant with AI - Enhanced word finder tool
  * Helps find rhyming and related words using Datamuse API with AI-powered suggestions
  */
-import {savePoem, loadPoem} from './modules/saveLoadPoem';
+import { savePoem, loadPoem } from './modules/saveLoadPoem';
+import { sharePoem } from './modules/sharePoem';
 // DOM Elements
 const wordFinderForm = document.getElementById('wordFinderForm');
 const userWordInput = document.getElementById('userWord');
@@ -15,8 +16,9 @@ const resultsHeading = document.getElementById('resultsHeading');
 const saveTextBtn = document.getElementById('saveTextBtn');
 const clearTextBtn = document.getElementById('clearTextBtn');
 const copyTextBtn = document.getElementById('copyTextBtn');
+const shareTextBtn = document.getElementById('shareTextBtn');
 const aiCompletionBtn = document.getElementById('aiCompletionBtn');
-const analyzeBtn= document.getElementById('analyzeBtn');
+const analyzeBtn = document.getElementById('analyzeBtn');
 const aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
 
 
@@ -255,7 +257,8 @@ async function getAICompletion() {
 
   try {
     const completionData = await fetchFromAI({
-      prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 3 more lines.`, max_tokens:100});
+      prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 3 more lines.`, max_tokens: 100
+    });
 
     // Append the completion to the existing text
     textareaElement.value = `${currentText}\n${completionData.trim()}`;
@@ -361,7 +364,8 @@ clearTextBtn.addEventListener('click', clearTextarea);
 copyTextBtn.addEventListener('click', copyToClipboard);
 aiCompletionBtn.addEventListener('click', getAICompletion);
 analyzeBtn.addEventListener('click', analyzePoem);
-saveTextBtn.addEventListener('click',()=>savePoem(textareaElement.value));
+saveTextBtn.addEventListener('click', () => savePoem(textareaElement.value));
+shareTextBtn.addEventListener('click', () => sharePoem(textareaElement.value));
 
 // Focus the input field on page load
 window.addEventListener('load', () => {
