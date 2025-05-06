@@ -21,12 +21,13 @@ const aiCompletionBtn = document.getElementById('aiCompletionBtn');
 const analyzeBtn = document.getElementById('analyzeBtn');
 const aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
 
-
+/* 
 // AI-API configuration
 const API_KEY = process.env.RhymeAI;
 const AI_MODEL = "mistralai/mistral-7b-instruct:free";
 // Default prompt context for AI
 const AI_CONTEXT = `You are a helpful poetry writing assistant. Your task is to help users write better poems by offering suggestions based on the words they've selected and the theme of their writing.`;
+ */
 
 // Word history to track what the user has selected
 let selectedWords = [];
@@ -289,7 +290,8 @@ async function analyzePoem() {
 
   try {
     const analysisData = await fetchFromAI({
-      prompt: `Analyze this poem draft: "${currentText}"\n\nProvide brief, short feedback on: 1) Rhythm/meter, 2) Imagery, 3) Theme coherence, and 4) One specific suggestion for improvement.`});
+      prompt: `Analyze this poem draft: "${currentText}"\n\nProvide brief, short feedback on: 1) Rhythm/meter, 2) Imagery, 3) Theme coherence, and 4) One specific suggestion for improvement.`
+    });
 
     // Show analysis in modal
     const modalBody = document.getElementById('poemAnalysisBody');
@@ -325,35 +327,29 @@ function toggleAILoading(isLoading) {
  * @param {Object} options - Options for the API request
  * @returns {Promise<string>} - The AI response text
  */
-async function fetchFromAI(options) {
+// Client-side κώδικας (παραμένει ο ίδιος με την αρχική πρόταση για standard functions)
+async function fetchFromAIviaNetlify(options) {
   try {
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    const response = await fetch("/.netlify/functions/fetchFromAI", { // ή το custom path αν χρησιμοποιείτε redirects
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "HTTP-Referer": "https://rhymeai.netlify.app", // Optional. Site URL for rankings on openrouter.ai.
-        "X-Title": "RhymeAi", // Optional. Site title for rankings on openrouter.ai.
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        "model": `${AI_MODEL}`,
-        "messages": [
-          { role: "system", content: AI_CONTEXT },
-          { role: "user", content: options.prompt }
-        ],
-        max_tokens: options.tokens
+        prompt: options.prompt,
+        tokens: options.tokens
       })
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || 'AI API request failed');
+      throw new Error(data.error || data.message || 'Netlify function request failed');
     }
 
-    const data = await response.json();
-    return data.choices[0].message.content;
+    return data.message;
   } catch (error) {
-    console.error('AI API error:', error);
+    console.error('Error calling Netlify function:', error);
     throw error;
   }
 }
