@@ -257,7 +257,7 @@ async function getAICompletion() {
   toggleAILoading(true);
 
   try {
-    const completionData = await fetchFromAI({
+    const completionData = await fetchFromAIviaNetlify({
       prompt: `Complete this poem in a natural way, maintaining its style, tone, and theme:\n\n"${currentText}"\n\nContinue from where it left off with 3 more lines.`, tokens: 100
     });
 
@@ -289,7 +289,7 @@ async function analyzePoem() {
   toggleAILoading(true);
 
   try {
-    const analysisData = await fetchFromAI({
+    const analysisData = await fetchFromAIviaNetlify({
       prompt: `Analyze this poem draft: "${currentText}"\n\nProvide brief, short feedback on: 1) Rhythm/meter, 2) Imagery, 3) Theme coherence, and 4) One specific suggestion for improvement.`
     });
 
