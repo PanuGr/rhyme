@@ -2,3 +2,6 @@ node_modules
 .env
 .parcel-cache
 dist
+
+# Local Netlify folder
+.netlify

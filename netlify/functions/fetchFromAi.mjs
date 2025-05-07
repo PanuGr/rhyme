@@ -1,9 +1,3 @@
-// netlify/functions/fetchFromAI.js
-
-// Δεν χρειάζεται ρητή εισαγωγή για το `Workspace` ή το `Netlify.env` αν το περιβάλλον τα παρέχει.
-// Εάν αντιμετωπίσετε προβλήματα, ίσως χρειαστεί να εγκαταστήσετε και να εισαγάγετε το 'node-fetch'.
-// import fetch from 'node-fetch'; // Ενδεχομένως να χρειαστεί
-
 export default async (request, context) => {
     // Βεβαιώσου ότι η μέθοδος είναι POST
     if (request.method !== "POST") {
