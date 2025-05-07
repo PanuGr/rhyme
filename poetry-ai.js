@@ -327,10 +327,10 @@ function toggleAILoading(isLoading) {
  * @param {Object} options - Options for the API request
  * @returns {Promise<string>} - The AI response text
  */
-// Client-side κώδικας (παραμένει ο ίδιος με την αρχική πρόταση για standard functions)
+
 async function fetchFromAIviaNetlify(options) {
   try {
-    const response = await fetch("/.netlify/functions/fetchFromAI", { // ή το custom path αν χρησιμοποιείτε redirects
+    const response = await fetch("https://rhymeai.netlify.app/.netlify/functions/fetchFromAi", { // ή το custom path αν χρησιμοποιείτε redirects
       method: "POST",
       headers: {
         "Content-Type": "application/json"
