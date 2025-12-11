@@ -1,6 +1,6 @@
 const EXPIRATION_TIME_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
-export function savePoem(poem) {
+export function savePoem(poem, saveBtn) {
     if (!poem) {
         console.log('empty');
     } else {
@@ -11,9 +11,9 @@ export function savePoem(poem) {
                 timestamp: now
             };
             localStorage.setItem('SavedPoem', JSON.stringify(poemData));
-            saveTextBtn.textContent = "Saved!";
+            if (saveBtn) saveBtn.textContent = "Saved!";
         } catch (error) {
-            saveTextBtn.textContent = "error";
+            if (saveBtn) saveBtn.textContent = "error";
             console.error("Error saving poem:", error);
         }
     }
