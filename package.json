@@ -1,0 +1,17 @@
+{
+  "name": "rhyme",
+  "version": "3.0.0",
+  "description": "I've created an AI-enhanced version that provides creative assistance, in order to help you find words that rhyme so you can write easier poems or songs.",
+  "source": "index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build",
+    "safe": "parcel --https"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.16.3"
+  }
+}

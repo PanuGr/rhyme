@@ -3,6 +3,7 @@
   --secondary-color: #5bc0be;
   --light-color: #edf5e1;
   --dark-color: #1c2541;
+  --accent-color: #6f42c1;
 }
 
 body {
@@ -11,6 +12,7 @@ body {
   background-size: cover;
   background-position: center;
   min-height: 100vh;
+  font-family: 'Segoe UI';
 }
 
 .results-container {
@@ -21,6 +23,9 @@ body {
   gap: 0.5rem;
   padding: 1rem 0;
   list-style-type: none;
+  overflow-y: auto;
+  max-height: 300px;
+
 }
 
 .result-item {
@@ -44,12 +49,55 @@ body {
   border-radius: 1rem;
   padding: 2rem;
   margin-top: 2rem;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .loading-indicator {
   display: none;
   margin: 1rem 0;
+}
+
+.ai-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.ai-loading-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.ai-badge {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.features-card {
+  border-left: 4px solid var(--accent-color);
+}
+
+.bg-purple {
+  background-color: var(--accent-color);
+}
+
+.poem-analysis {
+  white-space: pre-line;
 }
 
 @media (max-width: 768px) {
@@ -58,16 +106,3 @@ body {
     margin-top: 1rem;
   }
 }
-
-/* ol {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    flex-wrap: wrap;
-  }
-
-  ol li:hover {
-    cursor: pointer;
-    background-color: lightgray;
-    transition: background-color 150ms ease-in;
-  } */
