@@ -43,5 +43,3 @@ This version integrates AI into this application. The AI is providing creative a
 - Poem Completion: Have AI complete your poem based on what you've written
 - Structure Analysis: Get feedback on rhythm, imagery, and coherence
 - Two-Panel Interface: Separated word finding from composition for better workflow
-
-## Version 4
