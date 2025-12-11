@@ -21,14 +21,6 @@ const aiCompletionBtn = document.getElementById('aiCompletionBtn');
 const analyzeBtn = document.getElementById('analyzeBtn');
 const aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
 
-/* 
-// AI-API configuration
-const API_KEY = process.env.RhymeAI;
-const AI_MODEL = "mistralai/mistral-7b-instruct:free";
-// Default prompt context for AI
-const AI_CONTEXT = `You are a helpful poetry writing assistant. Your task is to help users write better poems by offering suggestions based on the words they've selected and the theme of their writing.`;
- */
-
 // Word history to track what the user has selected
 let selectedWords = [];
 
