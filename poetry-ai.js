@@ -189,7 +189,7 @@ async function handleFormSubmit(event) {
 function clearTextarea() {
   textareaElement.value = '';
   resultsContainer.innerHTML = "";
-  userWordInput.value = null;
+  userWordInput.value = '';
   selectedWords = [];
 }
 
