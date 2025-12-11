@@ -330,7 +330,7 @@ function toggleAILoading(isLoading) {
 
 async function fetchFromAIviaNetlify(options) {
   try {
-    const response = await fetch("https://rhymeai.netlify.app/.netlify/functions/fetchFromAi", { // ή το custom path αν χρησιμοποιείτε redirects
+    const response = await fetch("/.netlify/functions/fetchFromAi", { // ή το custom path αν χρησιμοποιείτε redirects
       method: "POST",
       headers: {
         "Content-Type": "application/json"
